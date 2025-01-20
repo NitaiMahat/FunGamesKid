@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Learning Games for Kids!</title>
+    <style>
+        
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a1c4fd);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-area {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff5252;
+        }
+        .spelling-modes {
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          margin-bottom: 20px;
+      }
+
+      #cardDisplay {
+          text-align: center;
+          margin: 20px 0;
+      }
+
+      .word-image {
+          max-width: 200px;
+          margin: 10px auto;
+      }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Fun Learning Games! 🎮</h1>
+            <p>Learn and play at the same time!</p>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card" onclick="showMathGame()">
+                <h2>🔢 Math Quiz</h2>
+                <p>Test your math skills!</p>
+            </div>
+            <div class="game-card" onclick="showMemoryGame()">
+                <h2>🎯 Memory Game</h2>
+                <p>Match the cards!</p>
+            </div>
+            <div class="game-card" onclick="showSpellingGame()">
+                <h2>📝 Spelling Game</h2>
+                <p>Practice your spelling!</p>
+            </div>
+        </div>
+
+        <!-- Math Game -->
+        <div id="mathGame" class="game-area">
+            <h2>Math Quiz</h2>
+            <div id="question"></div>
+            <input type="number" id="answer">
+            <button class="btn" onclick="checkMathAnswer()">Check Answer</button>
+            <div id="result"></div>
+        </div>
+
+        <!-- Memory Game -->
+        <div id="memoryGame" class="game-area">
+            <h2>Memory Game</h2>
+            <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+            <div id="memoryResult"></div>
+        </div>
+
+        <!-- Spelling Game -->
+        <div id="spellingGame" class="game-area">
+          <h2>Spelling Game</h2>
+          <div class="spelling-modes">
+              <button class="btn" onclick="showFlashCards()">Practice Flash Cards</button>
+              <button class="btn" onclick="startSpellingTest()">Take Spelling Test</button>
+          </div>
+          <div id="flashCards" style="display: none;">
+              <div id="cardDisplay"></div>
+              <button class="btn" onclick="nextFlashCard()">Next Card</button>
+          </div>
+          <div id="spellingTest" style="display: none;">
+              <div id="wordToSpell"></div>
+              <input type="text" id="spellingAnswer">
+              <button class="btn" onclick="checkSpelling()">Check Spelling</button>
+              <div id="spellingResult"></div>
+          </div>
+      </div>
+
+    <script>
+        // Math Game
+        let currentAnswer;
+
+        function showMathGame() {
+            document.querySelectorAll('.game-area').forEach(area => area.style.display = 'none');
+            document.getElementById('mathGame').style.display = 'block';
+            generateMathQuestion();
+        }
+
+        function generateMathQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const operations = ['+', '-', 'x'];
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+
+            switch(operation) {
+                case '+':
+                    currentAnswer = num1 + num2;
+                    break;
+                case '-':
+                    currentAnswer = num1 - num2;
+                    break;
+                case 'x':
+                    currentAnswer = num1 * num2;
+                    break;
+            }
+
+            document.getElementById('question').innerHTML = 
+                `<h3>What is ${num1} ${operation} ${num2}?</h3>`;
+            document.getElementById('answer').value = '';
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function checkMathAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const resultDiv = document.getElementById('result');
+
+            if(userAnswer === currentAnswer) {
+                resultDiv.innerHTML = '🎉 Correct! Well done!';
+                setTimeout(generateMathQuestion, 1500);
+            } else {
+                resultDiv.innerHTML = '❌ Try again!';
+            }
+        }
+
+        // Memory Game
+        const emojis = ['🐶', '🐱', '🐰', '🐨', '🐸', '🦊', '🐯', '🦁'];
+        let cards = [...emojis, ...emojis];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function showMemoryGame() {
+            document.querySelectorAll('.game-area').forEach(area => area.style.display = 'none');
+            document.getElementById('memoryGame').style.display = 'block';
+            initializeMemoryGame();
+        }
+
+        function initializeMemoryGame() {
+            matchedPairs = 0;
+            const shuffledCards = cards.sort(() => Math.random() - 0.5);
+            const memoryGrid = document.getElementById('memoryGrid');
+            memoryGrid.innerHTML = '';
+
+            shuffledCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.style.height = '100px';
+                card.style.background = '#ddd';
+                card.style.display = 'flex';
+                card.style.alignItems = 'center';
+                card.style.justifyContent = 'center';
+                card.style.fontSize = '2em';
+                card.style.cursor = 'pointer';
+                card.style.borderRadius = '10px';
+                card.dataset.value = emoji;
+                card.dataset.index = index;
+                card.onclick = () => flipCard(card);
+                memoryGrid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length === 2 || flippedCards.includes(card) || card.textContent) return;
+
+            card.textContent = card.dataset.value;
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.value === card2.dataset.value) {
+                matchedPairs++;
+                if (matchedPairs === emojis.length) {
+                    document.getElementById('memoryResult').innerHTML = '🎉 Congratulations! You won!';
+                    setTimeout(initializeMemoryGame, 2000);
+                }
+            } else {
+                card1.textContent = '';
+                card2.textContent = '';
+            }
+            flippedCards = [];
+        }
+
+        
+
+         // Spelling Game
+         const wordList = [
+         { word: 'cat', image: 'https://static.vecteezy.com/system/resources/previews/023/369/092/non_2x/cat-cartoon-character-clipart-ai-generated-free-png.png' },
+         { word: 'dog', image: 'https://www.jamiesale-cartoonist.com/wp-content/uploads/dog-12.png' },
+         { word: 'bird', image: 'http://www.clipartbest.com/cliparts/9cR/5X7/9cR5X7Kce.gif' },
+         { word: 'fish', image: 'https://www.seekpng.com/png/full/219-2196101_clownfish-png.png' },
+         { word: 'rabbit', image: 'https://www.jamiesale-cartoonist.com/wp-content/uploads/cartoon-bunny-free.png' },
+         { word: 'elephant', image: 'http://cliparts.co/cliparts/kiK/B8R/kiKB8ReRT.png' },
+         { word: 'giraffe', image: 'http://www.clipartbest.com/cliparts/di7/6zg/di76zg56T.png' },
+         { word: 'monkey', image: 'https://www.pinclipart.com/picdir/big/338-3380671_monkey-clip-art-transparent-monkey-clipart-png-download.png' }
+     ];
+     
+     let currentWord = '';
+     let currentWordIndex = 0;
+
+     function showSpellingGame() {
+         document.querySelectorAll('.game-area').forEach(area => area.style.display = 'none');
+         document.getElementById('spellingGame').style.display = 'block';
+         document.querySelector('.spelling-modes').style.display = 'flex';
+         document.getElementById('flashCards').style.display = 'none';
+         document.getElementById('spellingTest').style.display = 'none';
+     }
+
+     function showFlashCards() {
+         document.querySelector('.spelling-modes').style.display = 'flex';
+         document.getElementById('flashCards').style.display = 'block';
+         document.getElementById('spellingTest').style.display = 'none';
+         currentWordIndex = 0;
+         showCurrentFlashCard();
+     }
+
+     function showCurrentFlashCard() {
+         const cardDisplay = document.getElementById('cardDisplay');
+         const currentItem = wordList[currentWordIndex];
+         cardDisplay.innerHTML = `
+             <img src="${currentItem.image}" alt="${currentItem.word}" class="word-image">
+             <h3>${currentItem.word}</h3>
+         `;
+     }
+
+     function nextFlashCard() {
+         currentWordIndex = (currentWordIndex + 1) % wordList.length;
+         showCurrentFlashCard();
+     }
+
+     function startSpellingTest() {
+         document.querySelector('.spelling-modes').style.display = 'flex';
+         document.getElementById('flashCards').style.display = 'none';
+         document.getElementById('spellingTest').style.display = 'block';
+         generateSpellingWord();
+     }
+
+     function generateSpellingWord() {
+         const randomIndex = Math.floor(Math.random() * wordList.length);
+         currentWord = wordList[randomIndex].word;
+         const wordDiv = document.getElementById('wordToSpell');
+         const inputField = document.getElementById('spellingAnswer');
+         
+         wordDiv.innerHTML = `
+             <img src="${wordList[randomIndex].image}" alt="Spell this word" class="word-image">
+             <h3>Spell what you see in the picture!</h3>
+         `;
+         inputField.value = '';
+         document.getElementById('spellingResult').innerHTML = '';
+     }
+
+     function checkSpelling() {
+         const userAnswer = document.getElementById('spellingAnswer').value.toLowerCase().trim();
+         const resultDiv = document.getElementById('spellingResult');
+
+         if(userAnswer === currentWord) {
+             resultDiv.innerHTML = '🎉 Correct! Well done!';
+             setTimeout(generateSpellingWord, 1500);
+         } else {
+             resultDiv.innerHTML = `❌ Try again! The correct spelling is "${currentWord}"`;
+         }
+     }
+    </script>
+</body>
+</html>
