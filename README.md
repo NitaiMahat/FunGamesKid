@@ -1,4 +1,5 @@
-#Fun Learning Games for Kids
+Fun Learning Games for Kids
+
 This is a fun and interactive collection of educational games designed for kids to learn while having fun. The game includes three main games:
 
 Math Quiz: A simple quiz that challenges kids to solve math problems.
